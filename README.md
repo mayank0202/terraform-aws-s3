@@ -1,3 +1,3 @@
-# terraform-aws-securitygroup
+# terraform-aws-S3
 
 Author - Mayank Sharma
