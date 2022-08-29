@@ -1,9 +1,3 @@
-provider "aws" {
-  region = "us-east-1"   ## you can store your env in your local and can use profile from terminal
-  secret_key = ""
-  access_key = ""
-}
-
 
 data "aws_canonical_user_id" "this" {}
 
