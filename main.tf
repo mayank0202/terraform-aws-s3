@@ -130,7 +130,7 @@ resource "aws_s3_bucket_versioning" "this" {
   bucket                = aws_s3_bucket.this[0].id
   expected_bucket_owner = var.expected_bucket_owner
   mfa                   = try(var.versioning["mfa"], null)
-  
+  aws_s3_bucket_versioning   = true
 
   versioning_configuration {
     # Valid values: "Enabled" or "Suspended"
@@ -139,7 +139,7 @@ resource "aws_s3_bucket_versioning" "this" {
     # Valid values: "Enabled" or "Disabled"
     mfa_delete = try(tobool(var.versioning["mfa_delete"]) ? "Enabled" : "Disabled", title(lower(var.versioning["mfa_delete"])), null)
   }
-  versioning.mfa_delete = true
+  versioning_configuration.mfa_delete = enabled
 }
 
 resource "aws_s3_bucket_server_side_encryption_configuration" "this" {
