@@ -1,29 +1,40 @@
 
 
 ---
-name: Tag
+name: Upgrade Tag Version
 
 on:
-  push:
-    branches:
-      - master
+  pull_request:
+    types: [closed]
 
 jobs:
-  ## tag
-  tag:
-    runs-on: 
-      - self-hosted
-    steps:
-      - uses: actions/checkout@v2
+  upgrade-tag-version:
+    runs-on: ubuntu-latest
 
-      - name: Set GIT_TAG
-        run: |
-          echo "VERSION=$(cat .version | tr -d " \t\n\r")" >> $GITHUB_ENV
-      - name: git-tag
-        uses: pkgdeps/git-tag-action@v2.0.1
-        with:
-          version: ${{ env.VERSION }}
-          github_token: ${{ secrets.SECRET_TOKEN }}
-          github_repo: ${{ github.repository }}
-          git_commit_sha: ${{ github.sha }}
-          git_tag_prefix: ""
+    steps:
+    - name: Checkout Code
+      uses: actions/checkout@v2
+
+    - name: Upgrade Tag Version
+      run: |
+        echo "Upgrading tag version for Git..."
+
+        # Get the current tag version
+        current_version=$(git describe --tags)
+
+        # Split the version string into an array of version components
+        IFS='.' read -a version_components <<< "$current_version"
+
+        # Increment the patch version component
+        version_components[2]=$((${version_components[2]} + 1))
+
+        # Join the version components back into a string
+        new_version="${version_components[0]}.${version_components[1]}.${version_components[2]}"
+
+        # Create a new tag with the upgraded version
+        git tag $new_version
+
+        # Push the new tag to the remote repository
+        git push origin $new_version
+
+        echo "Tag version upgraded to $new_version."
