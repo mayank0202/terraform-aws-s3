@@ -5,7 +5,7 @@ name: Upgrade Tag Version
 
 on:
   pull_request:
-    types: [closed]
+    types: [merged]
 
 jobs:
   upgrade-tag-version:
